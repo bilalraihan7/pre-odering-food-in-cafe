@@ -1,0 +1,55 @@
+
+{% extends 'driver_base.html' %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block background %} {% endblock %}
+{% block body %}
+
+
+<div class="container">
+  <h1>Add Vehicle</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6 mb-2">
+        <label for="vehicle_name" class="form-label font-weight-bold text-uppercase">VEHICLE NAME</label>
+        <input type="text" class="form-control" id="vehicle_name" name="vehicle_name" required
+               pattern="[a-zA-Z0-9\s]{2,100}" title="Please enter a valid vehicle name. (2-100 alphanumeric characters)">
+      </div>
+      <div class="col-md-6 mb-2">
+        <label for="vehicle_reg" class="form-label font-weight-bold text-uppercase">VEHICLE REGISTRATION</label>
+        <input type="text" class="form-control" id="vehicle_reg" name="vehicle_reg" required
+                pattern="[A-Z]{2}\s?[0-9]{1,2}\s?[A-Z]{1,2}\s?[0-9]{4}" 
+                title="Please enter a valid Indian vehicle registration number. Example: MH 02 EA 1234">
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-2">
+        <label for="vehicle_type" class="form-label font-weight-bold text-uppercase">VEHICLE TYPE</label>
+        <select class="form-select" id="vehicle_type" name="vehicle_type" required>
+          <option value="">Select Vehicle Type</option>
+          <option value="3">PICKUP</option>
+          <option value="2">MINI PICKUP</option>
+          <option value="4">MINI TRUCK</option>
+          <option value="5">TRUCK</option>
+          <option value="1">3 WHEELER</option>
+        </select>
+      </div>
+      <div class="col-md-6 mb-2">
+        <label for="vehicle_image" class="form-label font-weight-bold text-uppercase">VEHICLE IMAGE</label>
+        <input type="file" class="form-control" id="vehicle_image" name="vehicle_image" accept="image/*" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-2">
+        <label for="rate" class="form-label font-weight-bold text-uppercase">RATE</label>
+        <input type="number" class="form-control" id="rate" name="rate" required
+               pattern="[0-9]+" title="Please enter a valid rate. (Only digits)">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">ADD VEHICLE</button>
+  </form>
+</div>
+{% endblock %}

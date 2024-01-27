@@ -16,6 +16,7 @@ def index(request):
         phone = request.POST.get('phone')
         department = request.POST.get('department')
         id_card = request.FILES.get('id_card')
+        idnumber = request.POST.get('idnumber')
         if User.objects.filter(email=email).exists():
             msg='User Already Exists'
             return render(request, 'cafeapp/index.html',{'msg':msg})
@@ -109,6 +110,17 @@ def  view_license(request, id):
     provider = get_object_or_404(Staff, pk=id)
     if provider.license:
         image_path = provider.license.path
+        with open(image_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='image/jpeg')
+            response['Content-Disposition'] = f'inline; filename={provider.name}_license.jpg'
+            return response
+    else:
+        return HttpResponse('License not found.')
+    
+def view_user_license(request, id):
+    provider = get_object_or_404(User, pk=id)
+    if provider.id_card:
+        image_path = provider.id_card.path
         with open(image_path, 'rb') as f:
             response = HttpResponse(f.read(), content_type='image/jpeg')
             response['Content-Disposition'] = f'inline; filename={provider.name}_license.jpg'

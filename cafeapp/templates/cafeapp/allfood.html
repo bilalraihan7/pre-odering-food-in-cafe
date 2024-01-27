@@ -64,20 +64,20 @@
     </div>
   </div>
   <div class="row">
- {% for vehicle in a %}
+ {% for food in a %}
     <div class="col-lg-4 col-md-6 col-sm-12">
         <div class="car-wrap rounded ftco-animate">
-            <div class="img rounded d-flex align-items-end" style="background-image: url('{{ vehicle.vehicle_image.url }}');">
+            <div class="img rounded d-flex align-items-end" style="background-image: url('{{ food.image.url }}');">
             </div>
             <div class="text">
-                <h2 class="mb-0"><a href="#">{{ vehicle.vehicle_name }}</a></h2>
+                <h2 class="mb-0"><a href="#">{{ food.name }}</a></h2>
                 <div class="d-flex mb-3">
-                    <span class="cat">{{ vehicle.vehicle_reg }}</span>
-                    <p class="price ml-auto">₹{{ vehicle.rate }} <span>/Km</span></p>
+                    <!-- <span class="cat">{{ vehicle.vehicle_reg }}</span> -->
+                    <p class="price ml-auto">₹{{ food.rate }}</p>
                 </div>
                 <p class="d-flex mb-0 d-block">
                     <a href="#" class="btn btn-primary py-2 mr-1">Book now</a>
-                    <a href="/detail/{{vehicle.id}}/" class="btn btn-secondary py-2 ml-1">Details</a>
+                    <!-- <a href="/detail/{{vehicle.id}}/" class="btn btn-secondary py-2 ml-1">Details</a> -->
                 </p>
             </div>
         </div>

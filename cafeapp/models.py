@@ -10,6 +10,7 @@ class User(models.Model):
     address=models.CharField(max_length=100,default='nothing')
     phone=models.IntegerField(default='1')
     department=models.CharField(max_length=100,default='nothing')
+    idnumber=models.IntegerField(default='1')
     id_card=models.ImageField(upload_to='idcard/',default='nothing')
     is_verified = models.BooleanField('Is Verified', default=False)
     def __str__(self):

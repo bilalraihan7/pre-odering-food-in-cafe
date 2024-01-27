@@ -27,6 +27,13 @@
     <link rel="stylesheet" href="{% static 'vehiapp/css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'vehiapp/css/style.css' %}">
   </head>
+  <style>
+    .btn.btn-third {
+  background: #b52424 !important;
+  border: 1px solid #c01212 !important;
+  color: #fff !important;
+}
+  </style>
   <body>
   <div class="me-md-3 me-xl-5">
                     <h2>Welcome back, {% for i in user %}<p>{{i.email}}<p>{% endfor %}</h2>
@@ -37,24 +44,25 @@
     	<div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12 heading-section text-center ftco-animate mb-5">
-      <h2 class="mb-2">Featured Vehicles</h2>
+      <h2 class="mb-2">Food Menu</h2>
     </div>
   </div>
   <div class="row">
- {% for vehicle in vehicles %}
+ {% for food in foods %}
     <div class="col-lg-4 col-md-6 col-sm-12">
         <div class="car-wrap rounded ftco-animate">
-            <div class="img rounded d-flex align-items-end" style="background-image: url('{{ vehicle.vehicle_image.url }}');">
+            <div class="img rounded d-flex align-items-end" style="background-image: url('{{ food.image.url }}');">
             </div>
             <div class="text">
-                <h2 class="mb-0"><a href="#">{{ vehicle.vehicle_name }}</a></h2>
+                <h2 class="mb-0"><a href="#">{{ food.name }}</a></h2>
                 <div class="d-flex mb-3">
-                    <span class="cat">{{ vehicle.vehicle_reg }}</span>
-                    <p class="price ml-auto">₹{{ vehicle.rate }} <span>/Km</span></p>
+                    <span class="cat">{{ food.ftype }}</span>
+                    <p class="price ml-auto">₹{{ food.rate }} </p>
                 </div>
                 <p class="d-flex mb-0 d-block">
-                    <a href="/book_vehicle/{{vehicle.id}}/" class="btn btn-primary py-2 mr-1">Book now</a>
-                    <a href="/detail/{{vehicle.id}}/" class="btn btn-secondary py-2 ml-1">Details</a>
+                    <a href="#" class="btn btn-primary py-2 mr-1">Bookings</a>
+                    <a href="#" class="btn btn-secondary py-2 ml-1">Edit</a>
+                    <a href="/delete_food/{{food.id}}/"  class="btn btn-third py-2 ml-1" onclick="return confirm('Are you sure to Delete ?')">Delete</a>
                 </p>
             </div>
         </div>

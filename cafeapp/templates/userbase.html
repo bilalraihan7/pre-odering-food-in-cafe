@@ -31,8 +31,8 @@
                   <i class="mdi mdi-magnify"></i>
                 </span>
               </div>
-              <form method="get" action="{% url 'search_vehicles' %}">
-              <input type="text" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search"name="vehicle_name">
+              <form method="get" action="{% url 'search_food' %}">
+              <input type="text" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search"name="name">
               </form>
               
             </div>
@@ -47,11 +47,11 @@
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
               <h6 class="p-3 mb-0">Filter options</h6>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item preview-item" href="/filter/1/">3 WHEELER</a>
-              <a class="dropdown-item preview-item" href="/filter/2/">MINI PICKUP</a>
-              <a class="dropdown-item preview-item" href="/filter/3/">PICKUP</a>
-              <a class="dropdown-item preview-item" href="/filter/4/">MINI TRUCK</a>
-              <a class="dropdown-item preview-item" href="/filter/5/">TRUCK</a>
+              <a class="dropdown-item preview-item" href="/filter/1/">Chips</a>
+              <a class="dropdown-item preview-item" href="/filter/2/">Soft Drink</a>
+              <a class="dropdown-item preview-item" href="/filter/3/">Meal</a>
+              <a class="dropdown-item preview-item" href="/filter/4/">Cake</a>
+              <a class="dropdown-item preview-item" href="/filter/5/">Snack</a>
             </div>
             
           <li class="nav-item dropdown me-4">
@@ -136,12 +136,12 @@
             </a>
           </li>
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="/drivers">
               <i class="mdi mdi-view-headline menu-icon"></i>
               <span class="menu-title">Drivers</span>
             </a>
-          </li>
+          </li> -->
           <li class="nav-item">
             <a class="nav-link" href="/edit-user">
               <i class="mdi mdi-chart-pie menu-icon"></i>

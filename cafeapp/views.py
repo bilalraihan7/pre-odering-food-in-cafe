@@ -14,29 +14,33 @@ def index(request):
         image = request.FILES.get('image')
         address = request.POST.get('address')
         phone = request.POST.get('phone')
+        department = request.POST.get('department')
+        id_card = request.FILES.get('id_card')
         if User.objects.filter(email=email).exists():
             msg='User Already Exists'
             return render(request, 'cafeapp/index.html',{'msg':msg})
         else:
 
             user = User(name=name, email=email,password=password, image=image, address=address,
-                        phone=phone)
+                        phone=phone,department=department,id_card=id_card)
             user.save()
             messages.success(request, 'User registration successful!')
             return redirect('/')
     else:
 
-        a = vehicle.objects.all()
+        a = foodmenu.objects.all()
         return render(request, 'cafeapp/index.html',{'a':a})
-def vehicles(request):
-    a=vehicle.objects.all()
-    return render(request,'cafeapp/vehicles.html',{"a":a})
-def details_vehicle(request,pk):
-    a = vehicle.objects.filter(id=pk)
-    return render(request, 'cafeapp/single_vehicle.html', {"a": a})
+    
+def Allfood(request):
+    a=foodmenu.objects.all()
+    return render(request,'cafeapp/allfood.html',{"a":a})
+
+# def details_vehicle(request,pk):
+#     a = vehicle.objects.filter(id=pk)
+#     return render(request, 'cafeapp/single_vehicle.html', {"a": a})
 
 
-def driver_registration(request):
+def staff_registration(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -45,43 +49,25 @@ def driver_registration(request):
         image = request.FILES.get('image')
         address = request.POST.get('address')
         phone = request.POST.get('phone')
-        if Driver.objects.filter(email=email).exists():
+        if Staff.objects.filter(email=email).exists():
             msg='User Already Exists'
-            return render(request, 'cafeapp/driverreg.html',{'msg':msg})
+            return render(request, 'cafeapp/staffreg.html',{'msg':msg})
         else:
         
-            driver = Driver(name=name, email=email, license=license, password=password, image=image, address=address, phone=phone)
-            driver.save()
-            messages.success(request, 'Driver registration successful!')
+            staff = Staff(name=name, email=email, license=license, password=password, image=image, address=address, phone=phone)
+            staff.save()
+            messages.success(request, 'Staff registration successful!')
             return redirect('/')
     else:
-        return render(request, 'cafeapp/driverreg.html')
+        return render(request, 'cafeapp/staffreg.html')
 
-
-def driver_registration(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        license = request.FILES.get('license')
-        password = request.POST.get('password')
-        image = request.FILES.get('image')
-        address = request.POST.get('address')
-        phone = request.POST.get('phone')
-
-        driver = Driver(name=name, email=email, license=license, password=password, image=image, address=address,
-                        phone=phone)
-        driver.save()
-        messages.success(request, 'Driver registration successful!')
-        return redirect('/')
-    else:
-        return render(request, 'cafeapp/driverreg.html')
 
 def login(request):
     if request.method == "POST":
 
         email = request.POST.get('email')
         password = request.POST.get('password')
-        obj1 = Driver.objects.filter(email=email, password=password)
+        obj1 = Staff.objects.filter(email=email, password=password)
         obj2 = User.objects.filter(email=email, password=password)
         if obj1.filter(email=email, password=password).exists():
             for i in obj1:
@@ -95,7 +81,7 @@ def login(request):
                 request.session['name']=name
             # context ={'a': obj }
             if status == 'Verified':
-                return redirect('http://127.0.0.1:8000/driver_home')
+                return redirect('http://127.0.0.1:8000/staff_home')
             else:
                 msg='Your Account Verification Is Under Processing'
                 return render(request, 'cafeapp/login.html',{'msg2':msg})
@@ -103,18 +89,24 @@ def login(request):
             for i in obj2:
                 id = i.id
                 name = i.name
+                is_verified=i.is_verified
                 request.session['name'] = name
                 request.session['email'] = email
                 request.session['password'] = password
                 request.session['id'] = id
-                return redirect('http://127.0.0.1:8000/user_home')
+                request.session['is_verified'] =is_verified
+                if is_verified==True:
+                    return redirect('http://127.0.0.1:8000/user_home')
+                else:
+                    context = {'msg': 'Your Account Verification Is Under Processing'}
+                    return render(request,'cafeapp/login.html',context)
         else:
             context = {'msg': 'Invalid Credentials'}
             return render(request,'cafeapp/login.html',context)
     return render(request, 'cafeapp/login.html')
 
 def  view_license(request, id):
-    provider = get_object_or_404(Driver, pk=id)
+    provider = get_object_or_404(Staff, pk=id)
     if provider.license:
         image_path = provider.license.path
         with open(image_path, 'rb') as f:
@@ -130,61 +122,60 @@ def services(request):
 def user_home(request):
     id=request.session['id']
     user=User.objects.filter(id=id)
-    vehicles=vehicle.objects.all()
-    all_data={'user':user,'vehicles':vehicles}
+    food=foodmenu.objects.all()
+    all_data={'user':user,'food':food}
     return render(request,'cafeapp/user_home.html', all_data )
 
 def logout_view(request):
     logout(request)
     return redirect('/')
 
-def driver_home(request):
+def staff_home(request):
     id=request.session['id']
-    user=Driver.objects.filter(id=id)
-    vehicles=vehicle.objects.filter(userid=id)
-    all_data={'user':user,'vehicles':vehicles}
-    return render(request,'cafeapp/driver_home.html', all_data )
+    user=Staff.objects.filter(id=id)
+    foods=foodmenu.objects.all()
+    all_data={'user':user,'foods':foods}
+    return render(request,'cafeapp/staff_home.html', all_data )
 
 
 
 
-def add_vehicle(request):
+def add_food(request):
     if request.method == 'POST':
-        vehicle_name = request.POST['vehicle_name']
-        vehicle_reg = request.POST['vehicle_reg']
-        vehicle_type = request.POST['vehicle_type']
-        vehicle_image = request.FILES['vehicle_image']
+        name = request.POST['name']
+        ftype = request.POST['ftype']
+        image = request.FILES['image']
         rate = request.POST['rate']
         user = request.session['id']
-        driver=Driver.objects.get(id=int(user))
+        staff=Staff.objects.get(id=int(user))
+        print(staff)
+        new_food = foodmenu(userid=staff, name=name, ftype=ftype, image=image, rate=rate)
+        new_food.save()
         
-        new_vehicle = vehicle(userid=driver, vehicle_name=vehicle_name, vehicle_reg=vehicle_reg, vehicle_type=vehicle_type, vehicle_image=vehicle_image, rate=rate)
-        new_vehicle.save()
-        
-        messages.success(request, 'Vehicle added successfully!')
-        return redirect('/driver_home')
+        messages.success(request, 'Food added successfully!')
+        return redirect('/staff_home')
     id=request.session['id']
-    user=Driver.objects.filter(id=id)
-    return render(request, 'cafeapp/add_vehicle.html',{'user':user})
+    user=Staff.objects.filter(id=id)
+    return render(request, 'cafeapp/add_food.html',{'user':user})
 
-def delete_vehicle(request,id):
-    a=vehicle.objects.get(id=id)
+def delete_food(request,id):
+    a=foodmenu.objects.get(id=id)
     a.delete()
-    return redirect('/driver_home')
+    return redirect('/staff_home')
 
 def filter(request,fid):
     id=request.session['id']
-    user=Driver.objects.filter(id=id)
-    vehicles=vehicle.objects.filter(vehicle_type=fid)
-    all_data={'user':user,'vehicles':vehicles}
+    user=Staff.objects.filter(id=id)
+    food=foodmenu.objects.filter(ftype=fid)
+    all_data={'user':user,'food':food}
     return render(request,'cafeapp/filtered.html', all_data )
 
 
-def search_vehicles(request):
+def search_food(request):
     id=request.session['id']
-    user=Driver.objects.filter(id=id)
-    vehicle_name=request.GET.get('vehicle_name')
-    result=vehicle.objects.filter(vehicle_name__icontains=vehicle_name)
+    user=User.objects.filter(id=id)
+    name=request.GET.get('name')
+    result=foodmenu.objects.filter(name__icontains=name)
     all_data={'user':user,'result':result}
     return render(request,'cafeapp/result.html', all_data )
 
@@ -385,8 +376,8 @@ def changepassword_user(request):
 def editdriver(request):
     if request.method == 'POST':
         id = request.session['id']
-        user = Driver.objects.filter(id=id)
-        up = Driver.objects.get(id=id)
+        user = Staff.objects.filter(id=id)
+        up = Staff.objects.get(id=id)
         name = request.POST.get('name')
         address = request.POST.get('address')
         phone = request.POST.get('phone')
@@ -402,7 +393,7 @@ def editdriver(request):
         up.email = email
 
         up.save()
-        ud = Driver.objects.filter(email=request.session['email'])
+        ud = Staff.objects.filter(email=request.session['email'])
         context = {'details': ud,
                    'user': user,
                    'msg': 'Profile Details Updated'}
@@ -411,8 +402,8 @@ def editdriver(request):
     else:
         id = request.GET.get('id')
         id = request.session['id']
-        up = Driver.objects.filter(id=id)
-        user =Driver.objects.filter(id=id)
+        up = Staff.objects.filter(id=id)
+        user =Staff.objects.filter(id=id)
         all_data = {
             'user': user,
             'details': up,
@@ -422,7 +413,7 @@ def editdriver(request):
 def changepassword_driver(request):
     id = request.session['id']
     print(id)
-    user = Driver.objects.filter(id=id)
+    user = Staff.objects.filter(id=id)
     all = {
         'user': user,
     }
@@ -434,7 +425,7 @@ def changepassword_driver(request):
         print("Current_password" + str(current_password))
         try:
 
-            ul = Driver.objects.get(email=email, password=current_password)
+            ul = Staff.objects.get(email=email, password=current_password)
 
             if ul is not None:
                 ul.password = new_password  # change field
@@ -453,7 +444,7 @@ def changepassword_driver(request):
                 }
                 return render(request, 'cafeapp/change_password_driver.html',all)
 
-        except Driver.DoesNotExist:
+        except Staff.DoesNotExist:
             context =  'Your Old Password is Wrong'
             all = {
                 'user': user,

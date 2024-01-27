@@ -8,9 +8,9 @@ from . models import *
 
 admin.site.register(User)
 admin.site.register(booking)
-admin.site.register(vehicle)
+admin.site.register(foodmenu)
 admin.site.register(Payment)
-class DriversAdmin(admin.ModelAdmin):
+class StaffAdmin(admin.ModelAdmin):
     list_display = ('name', 'address', 'status', 'is_verified', 'view_license_button')
     list_filter = ('status', 'is_verified')
     search_fields = ('name','phone',)
@@ -31,4 +31,7 @@ class DriversAdmin(admin.ModelAdmin):
 
     actions = [verify_license]
 
-admin.site.register(Driver,DriversAdmin)
+admin.site.register(Staff,StaffAdmin)
+
+
+
